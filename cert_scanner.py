@@ -7,10 +7,10 @@ class service:
         self.type = "web"
 
 
-def check_date(service):
+def check_date(service, OpenSSL, ssl, datetime):
     cert = ssl.get_server_certificate((service.cname, service.port))
     x509 = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert)
-
+    
     today = datetime.datetime.today()
 
     date_format, encoding = "%Y%m%d%H%M%SZ", "ascii"
@@ -21,8 +21,10 @@ def check_date(service):
         service.failing = True
 
 
-def main(list_of_servs, which_certse, environ, OpenSSL, ssl, datetime, pd, regex, logging):
+def main(list_of_servs, which_certs, environ, OpenSSL, ssl, datetime, pd, regex, logging):
     
+    list_of_servs = list_of_servs[1:len(list_of_servs)-1]
+    print(list_of_servs)
     cnames = list_of_servs.split(',')
 
     services = []
@@ -34,11 +36,11 @@ def main(list_of_servs, which_certse, environ, OpenSSL, ssl, datetime, pd, regex
     print('------')
     for i in services:
         print('checking ' + i.cname)
-        check_date(i)
+        check_date(i, OpenSSL, ssl, datetime)
         if i.failing == True:
-            log.info(i.cname + ' will expire within 30 days')
+            logging.info(i.cname + ' will expire within 30 days')
         else:
-            log.info(i.cname + ' server is safe')
+            logging.info(i.cname + ' server is safe')
     print('------')
 
     # ensure non-zero exit if any were failing    
@@ -64,12 +66,13 @@ if __name__ == "__main__":
 
         logging.basicConfig(level=logging.DEBUG, stream= stderr)
 
-        if len(argv[1]) != 2:
+        if len(argv[1]) != 3:
             print(argv)
             logging.error("""Wrong format or arguments :
              please try like 'python3 cert_scanner.py [list_of_servers_separated_by_commas_no_double_quotes] which_certs""")
 
         [list_of_servs, which_certs] = argv[1:]
-        main(list_of_servs, which_certse, environ, OpenSSL, ssl, datetime, pd, regex, logging)
+        print("The value is %s",list_of_servs)
+        main(list_of_servs, which_certs, environ, OpenSSL, ssl, datetime, pd, regex, logging)
 
     _server_status()
