@@ -1,0 +1,6 @@
+pandas
+requests
+pyOpenSSL
+regex
+pathlib2
+datetime
