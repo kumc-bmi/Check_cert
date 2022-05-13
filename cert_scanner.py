@@ -22,8 +22,7 @@ def check_date(service, OpenSSL, ssl, datetime):
 
 
 def main(list_of_servs, which_certs, environ, OpenSSL, ssl, datetime, pd, regex, logging):
-    
-    list_of_servs = list_of_servs[1:len(list_of_servs)-1]
+
     print(list_of_servs)
     cnames = list_of_servs.split(',')
 
@@ -35,7 +34,7 @@ def main(list_of_servs, which_certs, environ, OpenSSL, ssl, datetime, pd, regex,
 
     print('------')
     for i in services:
-        print('checking ' + i.cname)
+        logging.info('checking ' + i.cname)
         check_date(i, OpenSSL, ssl, datetime)
         if i.failing == True:
             logging.info(i.cname + ' will expire within 30 days')
@@ -66,13 +65,13 @@ if __name__ == "__main__":
 
         logging.basicConfig(level=logging.DEBUG, stream= stderr)
 
-        if len(argv[1]) != 3:
+        if len(argv) != 3:
             print(argv)
             logging.error("""Wrong format or arguments :
              please try like 'python3 cert_scanner.py [list_of_servers_separated_by_commas_no_double_quotes] which_certs""")
 
         [list_of_servs, which_certs] = argv[1:]
-        print("The value is %s",list_of_servs)
+        logging.info("The servers being checked are %s",list_of_servs)
         main(list_of_servs, which_certs, environ, OpenSSL, ssl, datetime, pd, regex, logging)
 
     _server_status()

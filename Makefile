@@ -3,7 +3,7 @@ run: clean venv
 	which python3 && \
 	mkdir -p ./server_fails && \
 	# download which projects needs to export and its token && \
-	python3 cert_scanner.py [redcap.kumc.edu,heron.kumc.edu,nightheron.kumc.edu,webcamp.kumc.edu,informatics.kumc.edu,bmi-webcamp-dev.kumc.edu] 'both'
+	python3 cert_scanner.py redcap.kumc.edu,heron.kumc.edu,nightheron.kumc.edu,webcamp.kumc.edu,informatics.kumc.edu,bmi-webcamp-dev.kumc.edu 'both'
 
 venv:
 	# "creating python3 virtual env"
@@ -19,7 +19,7 @@ venv:
 
 clean:
 	# "deleting python3 virtual env"
-	rm -rf ./venv
+	rm -rf ./venv &&\
 	rm -rf ./server_fails
 	
 install_python3_cifs:
